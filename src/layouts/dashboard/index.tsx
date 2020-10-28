@@ -50,9 +50,7 @@ export const Dashboard = () => {
     const [humidity, setHumidity] = useState(0);
 
     React.useEffect(() => {
-        FakeService.sensors.pipe(
-            debounce(() => interval(200))
-        ).subscribe(({ temperature, pressure, humidity }) => {
+        FakeService.sensors.subscribe(({ temperature, pressure, humidity }) => {
             setTemperature(temperature);
             setHumidity(humidity);
             setPressure(pressure)

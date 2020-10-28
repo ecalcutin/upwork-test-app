@@ -1,5 +1,5 @@
-import { Observable, range, of, combineLatest } from 'rxjs';
-import { combineAll, concatMap, delay, map, mapTo, repeat, switchMap } from 'rxjs/operators'
+import { Observable, of, combineLatest, interval } from 'rxjs';
+import { delay, map, repeat, switchMap, debounce } from 'rxjs/operators'
 
 interface Sensors {
     humidity: number;
@@ -10,7 +10,7 @@ interface Sensors {
 const getRandomInt = (min: number, max: number) => {
     return Math.floor(Math.random() * (max - min)) + min;
 }
-class FakeService {
+export class FakeService {
 
     private humidity$: Observable<number> = of(null).pipe(
         switchMap(() => of(getRandomInt(1, 100))),
@@ -37,7 +37,8 @@ class FakeService {
                     humidity: vals[0],
                     pressure: vals[1],
                     temperature: vals[2],
-                }))
+                })),
+                debounce(() => interval(200))
             )
     }
 }

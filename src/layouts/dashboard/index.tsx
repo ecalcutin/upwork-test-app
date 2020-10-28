@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, Paper, Container, Drawer, List, ListItem, makeStyles, Theme, Grid } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Paper, Container, makeStyles } from '@material-ui/core';
+
+import { interval } from 'rxjs';
+import { debounce } from 'rxjs/operators';
 
 import styled from 'styled-components';
 
@@ -47,7 +50,9 @@ export const Dashboard = () => {
     const [humidity, setHumidity] = useState(0);
 
     React.useEffect(() => {
-        FakeService.sensors.pipe().subscribe(({ temperature, pressure, humidity }) => {
+        FakeService.sensors.pipe(
+            debounce(() => interval(200))
+        ).subscribe(({ temperature, pressure, humidity }) => {
             setTemperature(temperature);
             setHumidity(humidity);
             setPressure(pressure)
